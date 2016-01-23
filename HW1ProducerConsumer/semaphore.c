@@ -1,4 +1,4 @@
-#include <pthread.h>
+#include <pthread.h>		// need to compile with -lpthread
 #include <semaphore.h>
 #include <stdio.h>
 
@@ -31,8 +31,18 @@ void insertItem(int thingToInsert){
 **/
 int removeItem(){
 	int item = buffer[startIndexInBuffer-1];
+	buffer[startIndexInBuffer-1] = 0;
 	startIndexInBuffer--;
 	return item;
+}
+
+void printBuffer(){
+	int i = 0;
+	while (i < BUFFER_SIZE){
+		printf("%d ", buffer[i]);
+		i++;
+	}
+	printf("\n");
 }
 
 
@@ -45,6 +55,7 @@ void* producerFunc(void* unneededArg){
 		sem_wait(&criticalAccessor);
 		insertItem(itemProduced);
 		printf("Produced item %2d\n", itemProduced);
+		printBuffer();
 		sem_post(&criticalAccessor);
 		sem_post(&full);
 	}
@@ -58,6 +69,7 @@ void* consumerFunc(void* unneededArg){
 		sem_wait(&criticalAccessor);
 		int item = removeItem();
 		printf("Removed item %2d\n", item);
+		printBuffer();
 		sem_post(&criticalAccessor);
 		sem_post(&empty);
 	}
@@ -73,7 +85,7 @@ int main(){
 	pthread_join(consumer,NULL);
 	pthread_join(producer,NULL);
 
-	sem_destroy(criticalAccessor);
-	sem_destroy(empty);
-	sem_destroy(full);
+	sem_destroy(&criticalAccessor);
+	sem_destroy(&empty);
+	sem_destroy(&full);
 }
