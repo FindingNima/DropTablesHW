@@ -33,7 +33,7 @@ sem_t buffer_lock;
 
 
 bool shouldContinueProducing() {
-    if (num_producer_iterations < num_items) {
+    if (num_producer_iterations <= num_items) {
         num_producer_iterations++;
         return true;
     } else {
@@ -43,7 +43,7 @@ bool shouldContinueProducing() {
 
 
 bool shouldContinueConsuming() {
-    if (num_consumer_iterations < num_items) {
+    if (num_consumer_iterations <= num_items) {
         num_consumer_iterations++;
         return true;
     } else {
@@ -52,8 +52,8 @@ bool shouldContinueConsuming() {
 }
 
 void bufferPrinter(int thread_number) {
-    printf("bufferprinter called by %d\n", thread_number);
-    if (actual_num_produced % 100 == 0 && actual_num_produced != 0) {
+    // printf("bufferprinter called by %d\n", thread_number);
+    if (actual_num_produced % 1000 == 0 && actual_num_produced != 0) {
         printf("%d items created\n", actual_num_produced);
         int i;
         sem_wait(&buffer_lock);
@@ -112,7 +112,11 @@ void *consumer(void *t_number) {
         if (shouldContinue == false) {
             break;
         }
-        sem_wait(&total_full);
+
+        if (sem_trywait(&total_full) != 0){
+            printf("Consumer Thread #%d is Yielding!\n", thread_number);
+            sem_wait(&total_full);
+        }
         int i;
         sem_wait(&buffer_lock);
         for (i = 0; i < num_buffers; i++) {
