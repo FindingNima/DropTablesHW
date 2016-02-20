@@ -127,7 +127,7 @@ void handle_received_message(int socket_fd) {
         }
         sem_wait(&buffer_lock);
         all_buffers[index_to_decrement]--;
-        printf("Producer received index to decrement: %d\n", index_to_decrement);
+        // printf("Producer received index to decrement: %d\n", index_to_decrement);
 
         sem_post(&buffer_lock);
         sem_post(&total_empty);
