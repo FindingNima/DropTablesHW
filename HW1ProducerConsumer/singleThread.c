@@ -9,7 +9,8 @@
 	means it fills the buffer
 */
 void producer(int* buffer){
-	for (int i = 0; i < BUFFER_SIZE; ++i)
+	int i;
+	for (i = 0; i < BUFFER_SIZE; ++i)
 	{
 		*buffer = 1;
 		buffer++;
@@ -22,7 +23,8 @@ void producer(int* buffer){
 	means it takes everything from the buffer
 */
 void consumer(int* buffer){
-	for (int i = 0; i < BUFFER_SIZE; ++i)
+	int i;
+	for (i = 0; i < BUFFER_SIZE; ++i)
 	{
 		*buffer = 0;
 		buffer++;
@@ -30,7 +32,8 @@ void consumer(int* buffer){
 }
 
 void printBuffer(int *buffer){
-	for (int i = 0; i < BUFFER_SIZE; ++i)
+	int i;
+	for (i = 0; i < BUFFER_SIZE; ++i)
 	{
 		printf("%d ", *buffer);
 		buffer++;
